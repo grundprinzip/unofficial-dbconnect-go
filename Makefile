@@ -9,3 +9,7 @@ all:
 test:
 	@$(foreach pkg, $(PKGS),\
 		$(GO) test -v -run '(Test|Example)' $(pkg) || exit 1)
+
+clean:
+	rm -f main
+	rm -f main_x86_64
