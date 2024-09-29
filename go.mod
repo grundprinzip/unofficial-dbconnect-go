@@ -1,4 +1,4 @@
-module github.com/databricks/connect-go/v2
+module github.com/grundprinzip/unofficial-dbconnect-go/v2
 
 go 1.22.5
 

@@ -94,9 +94,9 @@ func (cb *DatabricksChannelBuilder) buildServerlessNotebookOrJob() (*grpc.Client
 		remote := fmt.Sprintf("localhost:%s", mtlsPort)
 		conn, err := grpc.NewClient(remote, opts...)
 		if err != nil {
-			return nil, sparkerrors.WithType(
+			return nil, WithType(
 				fmt.Errorf("failed to connect to remote %s: %w", remote, err),
-				sparkerrors.ConnectionError)
+				ConnectionError)
 		}
 		return conn, nil
 	} else {

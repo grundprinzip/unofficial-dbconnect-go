@@ -26,3 +26,4 @@ func WithType(err error, errType errorType) error {
 type errorType error
 
 var InvalidConfigurationError = errorType(errors.New("invalid configuration"))
+var ConnectionError = errorType(errors.New("connection error"))
