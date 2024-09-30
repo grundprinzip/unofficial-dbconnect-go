@@ -1,8 +1,6 @@
-module github.com/grundprinzip/unofficial-dbconnect-go/v2.0.1
+module github.com/grundprinzip/unofficial-dbconnect-go
 
 go 1.22.5
-
-replace github.com/apache/spark-connect-go/v35 => /Users/martin.grund/Development/spark-connect-go
 
 require (
 	github.com/apache/spark-connect-go/v35 v35.0.0-20240828145046-594f0b74e806
