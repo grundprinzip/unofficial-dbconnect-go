@@ -45,3 +45,17 @@ func newUnifiedAuthCredentials(cfg *config.Config) credentials.PerRPCCredentials
 		config: cfg,
 	}
 }
+
+type customTokenSource struct {
+	token string
+}
+
+func (ts customTokenSource) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
+	return map[string]string{
+		"authorization": "Bearer " + ts.token,
+	}, nil
+}
+
+func (ts customTokenSource) RequireTransportSecurity() bool {
+	return false
+}

@@ -26,7 +26,7 @@ const (
 	CONNECTION_TYPE_SERVERLESS  = iota
 )
 
-var FALLBACK_CONFIG_NOT_DETEECTED = errors.New("failed to detect serverless configuration")
+var ErrFallbackConfigNotDetected = errors.New("failed to detect serverless configuration")
 
 // DatabricksChannelBuilder is a builder that is used to create a GRPC connection to Databricks.
 // It allows to connect to clusters and serverless depending on the configuration.
@@ -100,7 +100,7 @@ func (cb *DatabricksChannelBuilder) buildServerlessNotebookOrJob() (*grpc.Client
 		}
 		return conn, nil
 	} else {
-		return nil, FALLBACK_CONFIG_NOT_DETEECTED
+		return nil, ErrFallbackConfigNotDetected
 	}
 }
 
@@ -146,9 +146,10 @@ func (cb *DatabricksChannelBuilder) Build(ctx context.Context) (*grpc.ClientConn
 
 	// If neither is present we're going to infer the behavior from the environment and try
 	// to resolve serverless first. However, this will check for variables that are only present
-	// for serverless notebooks and jobs.
+	// for serverless notebooks and jobs. If they are not present, we will fall back to the
+	// cluster configuration.
 	if !hasSessionId && !hasClusterId {
-		if conn, err := cb.buildServerlessNotebookOrJob(); err == nil || !errors.Is(err, FALLBACK_CONFIG_NOT_DETEECTED) {
+		if conn, err := cb.buildServerlessNotebookOrJob(); err == nil || !errors.Is(err, ErrFallbackConfigNotDetected) {
 			return conn, nil
 		}
 	}
@@ -213,18 +214,4 @@ func NewDataBricksChannelBuilder() *DatabricksChannelBuilder {
 		config:         &config.Config{},
 		connectionType: CONNECTION_TYPE_UNSPECIFIED,
 	}
-}
-
-type customTokenSource struct {
-	token string
-}
-
-func (ts customTokenSource) GetRequestMetadata(ctx context.Context, uri ...string) (map[string]string, error) {
-	return map[string]string{
-		"authorization": "Bearer " + ts.token,
-	}, nil
-}
-
-func (ts customTokenSource) RequireTransportSecurity() bool {
-	return false
 }
