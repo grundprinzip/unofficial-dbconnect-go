@@ -1,4 +1,4 @@
-module github.com/grundprinzip/unofficial-dbconnect-go/v2
+module github.com/grundprinzip/unofficial-dbconnect-go/v2.0.1
 
 go 1.22.5
 
