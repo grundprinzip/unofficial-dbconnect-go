@@ -68,12 +68,12 @@ func (cb *DatabricksChannelBuilder) Headers() map[string]string {
 
 func (cb *DatabricksChannelBuilder) buildServerlessNotebookOrJob() (*grpc.ClientConn, error) {
 	// Extract potential serverless interactive and jobs variables
-	mtlsPort := os.Getenv("DATABRICKS_S_PORT")
+	mtlsPort := os.Getenv("DATABRICKS_SERVERLESS_ADD_PORT")
 	token := os.Getenv("DATABRICKS_API_TOKEN")
 	// Metering session ID.
-	meteringId := os.Getenv("DATABRICKS_S_CLUSTER_ID")
-	sessionId := os.Getenv("DATABRICKS_S_SESSION_ID")
-	affinityKey := os.Getenv("DATABRICKS_S_AFFINITY")
+	meteringId := os.Getenv("DATABRICKS_SERVERLESS_CLUSTER_ID")
+	sessionId := os.Getenv("DATABRICKS_SERVERLESS_SESSION_ID")
+	affinityKey := os.Getenv("DATABRICKS_SERVERLESS_AFFINITY")
 
 	// In serverless notebooks only the session ID is set, but not the affinity key
 	if mtlsPort != "" && token != "" && sessionId != "" {
@@ -116,6 +116,9 @@ func (cb *DatabricksChannelBuilder) buildLocalRemote() (*grpc.ClientConn, error)
 		return nil, WithType(InvalidConfigurationError, err)
 	}
 	parts := strings.Split(u.Path, ";")
+
+	// Extract the actual socket path from the URL.
+	socket_path := parts[0]
 	for _, part := range parts {
 		if strings.HasPrefix(part, "session_id=") {
 			cb.sessionId = strings.TrimPrefix(part, "session_id=")
@@ -129,7 +132,7 @@ func (cb *DatabricksChannelBuilder) buildLocalRemote() (*grpc.ClientConn, error)
 	}
 
 	// Dial the Unix domain socket
-	return grpc.NewClient(fmt.Sprintf("unix://%s", u.Path), dialOptions...)
+	return grpc.NewClient(fmt.Sprintf("unix://%s", socket_path), dialOptions...)
 }
 
 func (cb *DatabricksChannelBuilder) Build(ctx context.Context) (*grpc.ClientConn, error) {
