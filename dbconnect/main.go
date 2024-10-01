@@ -159,8 +159,14 @@ func (cb *DatabricksChannelBuilder) Build(ctx context.Context) (*grpc.ClientConn
 
 	// On shared clusters, the local remote is passed as an environment variable.
 	hasLocalRemote := strings.HasPrefix(os.Getenv("SPARK_REMOTE"), "unix://")
-	if cb.connectionType == CONNECTION_TYPE_UNSPECIFIED && hasLocalRemote {
+	// On Single User clusters, the location of the socket must be inferred, but we can check
+	// if we run on a cluster using a different environment variable.
+	isSingleUserCluster := len(os.Getenv("DATABRICKS_RUNTIME_VERSION")) > 0
+	if cb.connectionType == CONNECTION_TYPE_UNSPECIFIED && (hasLocalRemote || isSingleUserCluster) {
 		cb.connectionType = CONNECTION_TYPE_LOCAL
+		if isSingleUserCluster {
+			os.Setenv("SPARK_REMOTE", "unix:///databricks/sparkconnect/grpc.sock")
+		}
 		return cb.buildLocalRemote()
 	}
 
