@@ -6,17 +6,18 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"github.com/apache/spark-connect-go/v35/spark/client/channel"
-	"github.com/apache/spark-connect-go/v35/spark/sparkerrors"
+	url2 "net/url"
+	"os"
+	"strings"
+
+	"github.com/apache/spark-connect-go/spark/client/channel"
+	"github.com/apache/spark-connect-go/spark/sparkerrors"
 	"github.com/databricks/databricks-sdk-go/config"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/credentials/local"
-	url2 "net/url"
-	"os"
-	"strings"
 )
 
 const (
