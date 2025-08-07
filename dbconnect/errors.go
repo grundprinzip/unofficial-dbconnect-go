@@ -2,8 +2,9 @@ package dbconnect
 
 import (
 	"fmt"
-	"github.com/go-errors/errors"
 	"io"
+
+	"github.com/go-errors/errors"
 )
 
 type wrappedError struct {
@@ -16,7 +17,7 @@ func (w *wrappedError) Unwrap() []error {
 }
 
 func (w *wrappedError) Error() string {
-	return fmt.Sprintf("%w", w)
+	return fmt.Errorf("%w", w).Error()
 }
 
 // Format formats the error, supporting both short forms (v, s, q) and verbose form (+v)
