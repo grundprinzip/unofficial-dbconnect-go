@@ -8,6 +8,7 @@ import (
 	"fmt"
 	url2 "net/url"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/apache/spark-connect-go/spark/client/channel"
@@ -25,6 +26,7 @@ const (
 	CONNECTION_TYPE_LOCAL       = iota
 	CONNECTION_TYPE_CLUSTER     = iota
 	CONNECTION_TYPE_SERVERLESS  = iota
+	DBConnectVersion            = "0.1.0"
 )
 
 var ErrFallbackConfigNotDetected = errors.New("failed to detect serverless configuration")
@@ -38,6 +40,21 @@ type DatabricksChannelBuilder struct {
 	config         *config.Config
 	sessionId      string
 	connectionType int
+	userAgent      string
+}
+
+func (cb *DatabricksChannelBuilder) User() string {
+	// This is not needed when using Databricks Connect.
+	return "n/a"
+}
+
+func (cb *DatabricksChannelBuilder) WithUserAgent(userAgent string) *DatabricksChannelBuilder {
+	cb.userAgent += " " + userAgent
+	return cb
+}
+
+func (cb *DatabricksChannelBuilder) UserAgent() string {
+	return cb.userAgent
 }
 
 func (cb *DatabricksChannelBuilder) UseServerless() *DatabricksChannelBuilder {
@@ -219,9 +236,16 @@ func (cb *DatabricksChannelBuilder) WithHeader(key, value string) *DatabricksCha
 }
 
 func NewDataBricksChannelBuilder() *DatabricksChannelBuilder {
+	defaultUserAgent := fmt.Sprintf("dbconnect-go/%s os/%s arch/%s go/%s",
+		DBConnectVersion,
+		runtime.GOOS,
+		runtime.GOARCH,
+		runtime.Version())
+
 	return &DatabricksChannelBuilder{
 		headers:        make(map[string]string),
 		config:         &config.Config{},
 		connectionType: CONNECTION_TYPE_UNSPECIFIED,
+		userAgent:      defaultUserAgent,
 	}
 }
