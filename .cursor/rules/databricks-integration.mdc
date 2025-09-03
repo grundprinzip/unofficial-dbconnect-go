@@ -1,0 +1,35 @@
+# Databricks Integration Guidelines
+
+## Authentication Patterns
+- Use the unified auth system from `github.com/databricks/databricks-sdk-go/config`
+- Implement `PerRPCCredentials` interface for gRPC authentication
+- Support both cluster and serverless compute connections
+- Handle token refresh automatically through the SDK
+
+## Connection Management
+- Use the `DataBricksChannelBuilder` pattern for creating connections
+- Support configuration through environment variables or config files
+- Implement proper connection cleanup and resource management
+- Handle connection errors gracefully with retry logic
+
+## Spark Connect Integration
+- Use `github.com/apache/spark-connect-go/v35` for Spark operations
+- Follow the session builder pattern for creating Spark sessions
+- Implement proper DataFrame operations and transformations
+- Handle Spark-specific errors and exceptions
+
+## Error Handling
+- Use custom error types for different failure scenarios
+- Provide meaningful error messages for debugging
+- Implement proper error wrapping with context
+- Handle authentication failures separately from connection failures
+
+## Configuration
+- Support both cluster ID and serverless configurations
+- Use the unified config system for authentication
+- Allow runtime configuration changes
+- Validate configuration before establishing connections
+description:
+globs:
+alwaysApply: false
+---

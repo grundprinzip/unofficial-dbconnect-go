@@ -1,0 +1,35 @@
+# Documentation Standards
+
+## Code Documentation
+- Add package-level comments for all packages
+- Document all exported functions and types
+- Use Go-style comments with proper formatting
+- Include usage examples in comments
+
+## README Updates
+- Keep [README.md](mdc:README.md) updated with latest usage examples
+- Include complete working examples like the one in the README
+- Document all configuration options and authentication methods
+- Provide troubleshooting section for common issues
+
+## API Documentation
+- Document the `dbconnect` package API thoroughly
+- Include parameter descriptions and return value explanations
+- Provide examples for common use cases
+- Document error conditions and handling
+
+## Example Code
+- Follow the pattern shown in [README.md](mdc:README.md) for usage examples
+- Include examples for both cluster and serverless connections
+- Show proper error handling patterns
+- Demonstrate DataFrame operations and transformations
+
+## Version Compatibility
+- Document Go version requirements
+- Note compatibility with different Databricks versions
+- Document breaking changes between versions
+- Include migration guides when needed
+description:
+globs:
+alwaysApply: false
+---

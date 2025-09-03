@@ -1,0 +1,22 @@
+# Databricks Connect Go Client Project
+
+This is an unofficial, experimental Databricks Connect Go client that allows connecting to Databricks clusters or serverless compute. The project is based on the Python client but is not officially supported by Databricks.
+
+## Key Files
+- [go.mod](mdc:go.mod) - Module definition and dependencies
+- [README.md](mdc:README.md) - Project documentation and usage examples
+- [Makefile](mdc:Makefile) - Build and test commands
+- [dbconnect/auth.go](mdc:dbconnect/auth.go) - Authentication implementation
+- [dbconnect/errors.go](mdc:dbconnect/errors.go) - Error handling utilities
+
+## Main Dependencies
+- `github.com/apache/spark-connect-go/v35` - Spark Connect Go client
+- `github.com/databricks/databricks-sdk-go` - Databricks SDK for Go
+- `google.golang.org/grpc` - gRPC for communication
+
+## Project Structure
+The project follows a simple Go module structure with the main functionality in the `dbconnect` package.
+description:
+globs:
+alwaysApply: false
+---

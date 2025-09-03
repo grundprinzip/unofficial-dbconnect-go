@@ -41,6 +41,7 @@ type DatabricksChannelBuilder struct {
 	sessionId      string
 	connectionType int
 	userAgent      string
+	opts           []grpc.DialOption
 }
 
 func (cb *DatabricksChannelBuilder) User() string {
@@ -162,7 +163,6 @@ func (cb *DatabricksChannelBuilder) Build(ctx context.Context) (*grpc.ClientConn
 		return nil, WithType(InvalidConfigurationError, errors.New("only one of x-databricks-session-id or x-databricks-cluster-id must be present"))
 	}
 
-	var opts []grpc.DialOption
 	remote := ""
 
 	// If neither is present we're going to infer the behavior from the environment and try
@@ -207,7 +207,7 @@ func (cb *DatabricksChannelBuilder) Build(ctx context.Context) (*grpc.ClientConn
 	if err != nil {
 		return nil, WithType(InvalidConfigurationError, err)
 	}
-	opts = append(opts, grpc.WithAuthority(url.Hostname()))
+	cb.opts = append(cb.opts, grpc.WithAuthority(url.Hostname()))
 	remote = fmt.Sprintf("%v:443", url.Hostname())
 
 	// Append the TLS certs and the auth source via profile.
@@ -220,14 +220,19 @@ func (cb *DatabricksChannelBuilder) Build(ctx context.Context) (*grpc.ClientConn
 	cred := credentials.NewTLS(&tls.Config{
 		RootCAs: systemRoots,
 	})
-	opts = append(opts, grpc.WithTransportCredentials(cred))
-	opts = append(opts, grpc.WithPerRPCCredentials(newUnifiedAuthCredentials(cb.config)))
+	cb.opts = append(cb.opts, grpc.WithTransportCredentials(cred))
+	cb.opts = append(cb.opts, grpc.WithPerRPCCredentials(newUnifiedAuthCredentials(cb.config)))
 
-	conn, err := grpc.NewClient(remote, opts...)
+	conn, err := grpc.NewClient(remote, cb.opts...)
 	if err != nil {
 		return nil, sparkerrors.WithType(fmt.Errorf("failed to connect to remote %s: %w", remote, err), sparkerrors.ConnectionError)
 	}
 	return conn, nil
+}
+
+func (cb *DatabricksChannelBuilder) WithDialOption(opt grpc.DialOption) *DatabricksChannelBuilder {
+	cb.opts = append(cb.opts, opt)
+	return cb
 }
 
 func (cb *DatabricksChannelBuilder) WithHeader(key, value string) *DatabricksChannelBuilder {
@@ -247,5 +252,6 @@ func NewDataBricksChannelBuilder() *DatabricksChannelBuilder {
 		config:         &config.Config{},
 		connectionType: CONNECTION_TYPE_UNSPECIFIED,
 		userAgent:      defaultUserAgent,
+		opts:           make([]grpc.DialOption, 0),
 	}
 }

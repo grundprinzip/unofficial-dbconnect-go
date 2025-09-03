@@ -1,0 +1,33 @@
+# Build and Testing Procedures
+
+## Build Commands
+- Use `make all` to build for current platform and Linux x86_64
+- Use `go build -o main` for local development builds
+- Cross-compile with `GOOS=linux GOARCH=amd64 go build`
+
+## Testing
+- Run tests with `make test`
+- Tests are filtered to exclude generated files and external packages
+- Use `go test -v -run '(Test|Example)'` pattern
+- Test all packages except `/tests`, `/xcpb`, `/gpb`, `/generated`
+
+## Code Quality
+- Use `go fmt` for code formatting
+- Run `go vet` for static analysis
+- Use `golint` for linting (if available)
+- Check for unused imports and variables
+
+## Dependencies
+- Keep dependencies up to date with `go mod tidy`
+- Use specific versions for critical dependencies
+- Document any version constraints in [go.mod](mdc:go.mod)
+- Test with different Go versions for compatibility
+
+## Cleanup
+- Use `make clean` to remove build artifacts
+- Remove `main` and `main_x86_64` binaries
+- Clean up any temporary files or logs
+description:
+globs:
+alwaysApply: false
+---

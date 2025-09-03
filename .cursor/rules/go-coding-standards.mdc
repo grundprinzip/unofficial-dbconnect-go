@@ -1,0 +1,32 @@
+# Go Coding Standards
+
+## Code Style
+- Follow Go formatting standards (use `gofmt` or `go fmt`)
+- Use meaningful variable and function names
+- Keep functions focused and concise
+- Use proper error handling with explicit error returns
+
+## Package Structure
+- Use the `dbconnect` package for main functionality
+- Follow Go package naming conventions
+- Keep packages focused on specific functionality
+
+## Error Handling
+- Use the custom error types defined in [dbconnect/errors.go](mdc:dbconnect/errors.go)
+- Wrap errors with context using `WithType()` function
+- Always check and handle errors explicitly
+- Use `errors.Is()` for error type checking
+
+## Authentication
+- Follow the patterns established in [dbconnect/auth.go](mdc:dbconnect/auth.go)
+- Use the unified auth credentials for Databricks authentication
+- Implement proper gRPC credential interfaces
+
+## Testing
+- Write tests for all public functions
+- Use the test patterns shown in the Makefile
+- Run tests with `make test` command
+description:
+globs:
+alwaysApply: false
+---
