@@ -12,7 +12,7 @@ by connecting to a cluster or the serverless compute.
 In your go project add the client to your go dependencies.
 
 ```shell
-go get github.com/grundprinzip/unofficial-dbconnect-go/v2
+go get github.com/grundprinzip/unofficial-dbconnect-go
 ```
 
 Now you can use it directly from your code:
@@ -23,9 +23,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/apache/spark-connect-go/v35/spark/sql"
-	"github.com/apache/spark-connect-go/v35/spark/sql/functions"
-	"github.com/grundprinzip/unofficial-dbconnect-go/v2/dbconnect"
+	"github.com/apache/spark-connect-go/spark/sql"
+	"github.com/apache/spark-connect-go/spark/sql/functions"
+	"github.com/grundprinzip/unofficial-dbconnect-go/dbconnect"
 	"log"
 )
 
